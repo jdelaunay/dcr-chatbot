@@ -55,7 +55,11 @@ def get_graph(state) -> ET.Element:
     if response.status_code == 200:
         return ET.fromstring(response.content)
     else:
-        logging.error(f"Failed to get graph: {response.status_code}")
+        hint = ''
+        if response.status_code in (401, 403):
+            hint = (' (DCR rejected the credentials or this graph is not shared with them; check API_KEY/TOKEN,'
+                    ' and note that variables exported in the shell override .env)')
+        logging.error(f"Failed to get graph: {response.status_code}{hint}")
         return None
 
 def _sim_url(state, suffix: str = '') -> str:

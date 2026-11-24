@@ -24,6 +24,16 @@ def groups(event):
     return result
 
 
+def marking_summary(payload):
+    """Event ids by state, for logs. Never values or effect parameters: those hold API keys and applicant answers."""
+    events = (payload or {}).get('events') if isinstance(payload, dict) else None
+    if not isinstance(events, list):
+        return 'unavailable'
+    def ids(flag):
+        return [e.get('id') for e in events if e.get('included') is True and e.get(flag)]
+    return f"pending={ids('pending')} enabled={len(ids('enabled'))}/{len(events)} executed={ids('executed')}"
+
+
 def is_faq(payload):
     return any(groups(e) & {'GlobalInterpreter', 'FAQTopicMenu', 'FAQAnswer', 'FAQHome'}
                for e in (payload or {}).get('events', []))
@@ -229,7 +239,7 @@ def execute(state, candidate, payload):
     other_pending = [e for e in latest['events'] if active(e) and e not in answers
                      and not is_application_event(e)]
     if len(answers) != 1 or other_pending:
-        log.error('FAQ invalid answer marking=%s', latest)
+        log.error('FAQ invalid answer marking: %s', marking_summary(latest))
         raise StateError('DCR did not produce exactly one pending answer')
     answer = answers[0]
     text = answer.get('description')
@@ -268,7 +278,7 @@ def execute(state, candidate, payload):
         if nav['topic_explored']:
             response['follow_up'] = nav['response']
     except StateError:
-        log.error('FAQ navigation failed marking=%s', state.get('simulation_state'))
+        log.error('FAQ navigation failed marking: %s', marking_summary(state.get('simulation_state')))
         response['error_code'] = 'navigation_error'
         response['follow_up'] = 'The answer was retrieved, but navigation is unavailable. Please restart the conversation.'
     return response

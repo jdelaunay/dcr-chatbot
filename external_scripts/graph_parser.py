@@ -15,8 +15,6 @@ from typing import Dict, Any, Iterable, Optional
 from datetime import datetime
 import threading
 
-logging.basicConfig(level=logging.DEBUG)
-
 # In-memory cache for parsed graphs
 # Key: f"{graph_id}_{graph_hash}"
 # Value: {"parsed_at": timestamp, "canonical_json": {...}}

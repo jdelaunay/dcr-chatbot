@@ -25,7 +25,7 @@ python app.py
 
 Open `http://localhost:8080/demo?graphid=<your-imported-graph-id>`. `/` redirects to `/demo`.
 The application demo is at `/application?graphid=<id>`, with simulated login at `/mitid?graphid=<id>`.
-The UI's fallback ID is `2012701`; it is a historical default, not a guarantee of graph access or the latest revision.
+The UI's fallback ID is `2017158` (`demo-ui/src/graphId.js`; set `VITE_GRAPH_ID` when building to change it); it is a historical default, not a guarantee of graph access or the latest revision.
 For the current retrieval pilot, import the credential-free
 [`SU_handicaptillaeg_FAQ_Retrieval_Clean_NoEffect.xml`](xml%20graphs/SU_handicaptillaeg_FAQ_Retrieval_Clean_NoEffect.xml)
 and use the ID assigned by your Portal. See [deployment and effect setup](docs/guides/DEPLOY.md).

@@ -81,6 +81,7 @@ SETTINGS = {s.name: s for s in [
     _s('RUNTIME_TRACE_DIR', 'path', 'traces/runtime', 'ops', 'Folder of simulation snapshots and choice diagnostics.'),
     _s('APPLICATION_ENABLED_FALLBACK', 'flag', False, 'ops', 'Diagnostic switch: treat the application as enabled. Read once at import.'),
     _s('FAQ_API_PORT', 'int', 8090, 'ops', 'Port of the FAQ search API.'),
+    _s('PORT', 'int', 8080, 'ops', 'Port of the chatbot web server.'),
     _s('FAQ_API_EXTRA_KEYS', 'str', '', 'secret', 'Further accepted keys of the FAQ search API.'),
     _s('FAQ_API_KEY', 'str', '', 'secret', 'Key of the FAQ search API.'),
     _s('OPENAI_API_KEY', 'str', None, 'secret', 'OpenAI key.'),

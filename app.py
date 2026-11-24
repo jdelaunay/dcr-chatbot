@@ -169,7 +169,8 @@ def faq_response(state, data):
                 return jsonify(retrieval_runtime.handle(state, data))
             return jsonify(faq_runtime.handle(state, data))
         except faq_runtime.StateError as error:
-            logging.warning('FAQ state validation failed: %s marking=%s', error, state.get('simulation_state'))
+            logging.warning('FAQ state validation failed: %s marking: %s', error,
+                            faq_runtime.marking_summary(state.get('simulation_state')))
             return jsonify({'faq': True, 'status': 'graph_state_error',
                             'error': str(error)}), 409
         except Exception as error:
@@ -849,4 +850,8 @@ def get_parsed_graph(graph_id):
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    serve(app, host="0.0.0.0", port=8080)
+    for name, value in (('API_KEY', api_key), ('ROOT_URL', root_url)):
+        if not value:
+            logging.warning('%s is not set; DCR requests will fail. Set it in .env or the environment.', name)
+    from dcrai import registry
+    serve(app, host="0.0.0.0", port=registry.get('PORT'))

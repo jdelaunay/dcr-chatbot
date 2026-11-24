@@ -268,6 +268,13 @@ def create_app(retriever=None, settings=None, api_key: str | None = None,
 
 
 def main(argv=None) -> int:
+    # Before the parser: FAQ_API_PORT in .env sets the --port default.
+    try:
+        from dotenv import load_dotenv
+        load_dotenv()
+    except ImportError:
+        pass
+
     parser = argparse.ArgumentParser(description="Read-only FAQ search API for DCR effects.")
     parser.add_argument("--host", default="127.0.0.1",
                         help="bind address (default 127.0.0.1; use a tunnel to expose it)")
@@ -281,12 +288,6 @@ def main(argv=None) -> int:
     args = parser.parse_args(argv)
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
-
-    try:
-        from dotenv import load_dotenv
-        load_dotenv()
-    except ImportError:
-        pass
 
     api_key = os.getenv("FAQ_API_KEY", "").strip()
     if not api_key and not args.no_auth:

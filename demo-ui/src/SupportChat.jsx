@@ -1,5 +1,6 @@
 import { createElement, useEffect, useRef, useState } from 'react';
 import Icon from './Icon';
+import { graphId } from './graphId';
 import botIcon from './assets/icons8-bot.gif';
 
 // A retrieval chat with no activity for this long is ended (recorded in DCR as FAQ_Triage = 4, goodbye shown).
@@ -195,7 +196,8 @@ export default function SupportChat() {
       setReady(!data.error_code);
       if (data.error_code) setError('Please start a new chat to continue.');
     } catch (failure) {
-      if (failure.name !== 'AbortError') { setError('We couldn’t complete that request. Please start a new chat to continue.'); setReady(false); }
+      // The applicant sees a generic message; the server's reason stays visible to developers in the console.
+      if (failure.name !== 'AbortError') { console.error('Chat request failed:', failure.message); setError('We couldn’t complete that request. Please start a new chat to continue.'); setReady(false); }
     } finally {
       busyRef.current = false; setBusy(false);
     }
@@ -203,8 +205,7 @@ export default function SupportChat() {
   function initialize() {
     if (busyRef.current) return;
     initialized.current = true; session.current = newId(); setReady(false); setMessages([]); setNavigation([]); setInput(''); setEnded(null);
-    const graph = new URLSearchParams(window.location.search).get('graphid') || '2012701';
-    request('/init', { graph_id: graph });
+    request('/init', { graph_id: graphId() });
   }
   function show() { setOpen(true); if (!initialized.current) initialize(); }
   function close() { setOpen(false); launcher.current?.focus(); }
@@ -216,8 +217,7 @@ export default function SupportChat() {
     // own. The inline handover below remains only as a safety net.
     // The retrieval chat's Start button (and the 'Start the application' action) does the same.
     if (text?.trim().toLowerCase() === 'proceed to application' || payload?.action === 'apply') {
-      const graph = new URLSearchParams(window.location.search).get('graphid') || '2012701';
-      window.location.assign(`/mitid?graphid=${encodeURIComponent(graph)}`);
+      window.location.assign(`/mitid?graphid=${encodeURIComponent(graphId())}`);
       return;
     }
     request('/chat', payload, text);

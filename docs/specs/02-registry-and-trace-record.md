@@ -179,6 +179,7 @@ Class decides how a setting is handled. `threshold`, `flag`, `model`, `retrieval
 | `RUNTIME_TRACE_DIR` | path | `traces/runtime` | ops | `dcrai/paths.py:23` | unchanged |
 | `APPLICATION_ENABLED_FALLBACK` | flag | `0` | ops | `dcrai/application/application_runtime.py:46` | registry; still evaluated once at import (diagnostic switch) |
 | `FAQ_API_PORT` | int | `8090` | ops | `faq_search/api.py:273` | unchanged |
+| `PORT` | int | `8080` | ops | `app.py` (`__main__`) | new; was hardcoded |
 | `FAQ_API_EXTRA_KEYS` | str | empty | secret | `faq_search/api.py:177` | unchanged |
 | `FAQ_API_KEY` | str | empty | secret | `faq_search/api.py:289` | unchanged |
 | `OPENAI_API_KEY` | str | none | secret | `dcrai/llm/retrieval_llm.py:44,47,190,197`; `dcrai/llm/openchat.py:106,109,174,176,179` | unchanged |

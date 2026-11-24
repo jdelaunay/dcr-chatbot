@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, createElement } from 'react';
 import './application.css';
 import { newSessionId } from './sessionId';
+import { graphId } from './graphId';
 import Icon from './Icon';
 import ThemeToggle from './ThemeToggle';
 
@@ -23,7 +24,7 @@ function AnswerBody({ html }) {
   return <div className="faq-body">{Array.from(doc.body.childNodes, (n, i) => render(n, i))}</div>;
 }
 
-const graph = () => new URLSearchParams(location.search).get('graphid') || '2012701';
+const graph = graphId;
 const demoUrl = (path) => `${path}?graphid=${encodeURIComponent(graph())}`;
 
 export function MitIdDemo() {
