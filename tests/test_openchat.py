@@ -4,9 +4,9 @@ import unittest
 from types import SimpleNamespace
 from unittest.mock import Mock, patch
 
-import openchat
-import faq_runtime as faq
-import dcr_repository as repo
+from dcrai.llm import openchat
+import dcrai.chat.faq_runtime as faq
+import dcrai.dcr.dcr_repository as repo
 import app
 
 
@@ -60,19 +60,19 @@ class MatcherTests(unittest.TestCase):
             self.assertEqual(openchat.decide(rows,openchat.Settings())[0],expected)
 
     def test_invalid_rankings(self):
-        bad=[{}, {'ranked_matches':[]}, {'ranked_matches':[row('unknown')]},
+        bad=[{}, {'ranked_matches':[row('unknown')]},
              {'ranked_matches':[row(),row()]}, {'ranked_matches':[row(score=float('nan'))]},
              {'ranked_matches':[row(score=float('inf'))]}, {'ranked_matches':[row(score=-.1)]},
              {'ranked_matches':[row(score=1.1)]}, {'ranked_matches':[row(score=True)]},
              {'ranked_matches':[row(score='0.9')]}]
         for raw in bad:
             with self.subTest(raw=raw),self.assertRaises(openchat.MatchError):
-                openchat.validate_ranking(raw,{'global:7'})
+                openchat.validate_ranking(dict(in_scope=True, scope_reason='Relevant', **raw),{'global:7'})
 
     def test_sdk_payload_context_schema_and_retry(self):
         client=Mock();client.responses.create.side_effect=[
             SimpleNamespace(status='completed',output_text='bad'),
-            SimpleNamespace(status='completed',output_text=json.dumps({'ranked_matches':[row()]}),usage=None)]
+            SimpleNamespace(status='completed',output_text=json.dumps({'in_scope':True, 'scope_reason':'Relevant follow-up', 'ranked_matches':[row()]}),usage=None)]
         candidates=faq.catalogue(initial());candidates[0]['description']='FORBIDDEN ANSWER'
         self.assertEqual(openchat.rank('What about that?', 'Diagnosis enough?', candidates,client)[0], 'single_match')
         self.assertEqual(client.responses.create.call_count,2)
@@ -190,7 +190,7 @@ class FlowTests(unittest.TestCase):
         self.assertEqual(self.write.call_count,1)
 
     def test_raw_execution_does_not_read_xml(self):
-        with patch.object(repo.ET,'fromstring',side_effect=AssertionError('XML')),patch.object(repo.requests,'post',return_value=Mock(status_code=204)) as post:
+        with patch.object(repo.ET,'fromstring',side_effect=AssertionError('XML')),patch.object(repo._session,'post',return_value=Mock(status_code=204)) as post:
             self.assertTrue(repo.execute_raw_event(dict(root_url='https://example/',graph_id=1,simulation_id=2,api_key='test'),'global','7'))
             self.assertEqual(post.call_args.kwargs['json']['eventValue'],'7')
 

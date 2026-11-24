@@ -16,7 +16,84 @@ export default function Icon({ name, size = 22, stroke = 1.8 }) {
     help: <><circle cx="12" cy="12" r="9" /><path d="M9.7 9a2.5 2.5 0 1 1 4.25 1.8c-1.3 1.2-1.95 1.8-1.95 3.2M12 17h.01" /></>,
     clock: <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3.5 2" /></>,
     card: <><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 10h18" /></>,
+    edit: (
+      <>
+        <path d="M11.5 4H6a2.5 2.5 0 0 0-2.5 2.5v11A2.5 2.5 0 0 0 6 20h11a2.5 2.5 0 0 0 2.5-2.5v-5.5" />
+        <path d="M19.2 3.3a2.3 2.3 0 0 1 3.2 3.2L11.5 17.4l-4.2 1 1-4.2L19.2 3.3Z" />
+        <path d="m15.8 6.7 3.2 3.2" />
+      </>
+    ),
+    external: (
+      <>
+        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+        <polyline points="15 3 21 3 21 9" />
+        <line x1="10" y1="14" x2="21" y2="3" />
+      </>
+    ),
+    check: <polyline points="20 6 9 17 4 12" />,
+    'arrow-left': <path d="M20 12H4M10 6l-6 6 6 6" />,
+    'arrow-right': (
+      <>
+        <line x1="4" y1="12" x2="20" y2="12" />
+        <polyline points="14 6 20 12 14 18" />
+      </>
+    ),
+    shield: (
+      <>
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      </>
+    ),
+    user: (
+      <>
+        <circle cx="12" cy="8" r="4" />
+        <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
+      </>
+    ),
+    info: (
+      <>
+        <circle cx="12" cy="12" r="9" />
+        <line x1="12" y1="8" x2="12.01" y2="8" strokeWidth={stroke * 1.3} />
+        <line x1="12" y1="12" x2="12" y2="16" />
+      </>
+    ),
+    sun: (
+      <>
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+      </>
+    ),
+    moon: <path d="M21 13a8.5 8.5 0 1 1-10-10 7 7 0 0 0 10 10Z" />,
+    leaf: (
+      <>
+        <path d="M5 19c0-8 5-14 15-14 0 9-5 15-13 15" />
+        <path d="M5 19c3-5 6-8 10-10" />
+      </>
+    ),
+    'arrow-up': <path d="M12 19V5M5 12l7-7 7 7" />,
+    plus: <path d="M12 5v14M5 12h14" />,
+    save: (
+      <>
+        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+        <polyline points="17 21 17 13 7 13 7 21" />
+        <polyline points="7 3 7 8 15 8" />
+      </>
+    ),
   };
-  return <svg className={`icon icon-${name}`} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={stroke} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name] || paths.message}</svg>;
+  return (
+    <svg
+      className={`icon icon-${name}`}
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={stroke}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      {paths[name] || paths.message}
+    </svg>
+  );
 }
 
